@@ -10,7 +10,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TestUtils {
+public class TestUtil {
 
     private static final Date gInitDate = new Date();
 

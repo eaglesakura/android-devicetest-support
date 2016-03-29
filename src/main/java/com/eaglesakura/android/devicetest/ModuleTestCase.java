@@ -34,7 +34,7 @@ public abstract class ModuleTestCase extends AndroidTestCase {
                         }
                     }
                 });
-        mCacheDirectory = TestUtils.getCacheDirectory(getContext());
+        mCacheDirectory = TestUtil.getCacheDirectory(getContext());
     }
 
     public Thread getTestingThread() {
