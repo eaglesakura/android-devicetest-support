@@ -53,6 +53,11 @@ dependencies {
         compile 'com.eaglesakura:simple-utils:1.+'
         compile 'com.eaglesakura:android-simple-utils:1.+'
     }
+
+    /**
+     * Unit Testing
+     */
+    compile 'junit:junit:4.12'
 }
 
 apply plugin: 'maven'
