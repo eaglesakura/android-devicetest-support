@@ -14,26 +14,14 @@ public abstract class ModuleTestCase extends AndroidTestCase {
 
     private Thread mTestingThread;
 
+    protected String LOG_TAG = getClass().getSimpleName();
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
         mTestingThread = Thread.currentThread();
-
-        final String TAG = getClass().getSimpleName();
-        LogUtil.setLogger(
-                new LogUtil.Logger() {
-                    @Override
-                    public void out(int level, String tag, String msg) {
-                        try {
-                            StackTraceElement[] trace = new Exception().getStackTrace();
-                            StackTraceElement elem = trace[Math.min(trace.length - 1, 3)];
-                            Log.i(TAG, String.format("%s[%d] : %s", elem.getFileName(), elem.getLineNumber(), msg));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+        LogUtil.setLogger(new LogUtil.AndroidLogger(Log.class).setStackInfo(true));
         mCacheDirectory = TestUtil.getCacheDirectory(getContext());
     }
 

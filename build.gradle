@@ -58,7 +58,6 @@ dependencies {
      * Unit Testing
      */
     compile 'junit:junit:4.12'
-    compile "org.robolectric:robolectric:3.0"
 }
 
 apply plugin: 'maven'
