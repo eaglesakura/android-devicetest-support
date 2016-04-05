@@ -1,10 +1,8 @@
 package com.eaglesakura.android.devicetest;
 
 import com.eaglesakura.util.IOUtil;
-import com.eaglesakura.util.LogUtil;
 
 import android.test.AndroidTestCase;
-import android.util.Log;
 
 import java.io.File;
 
@@ -21,7 +19,6 @@ public abstract class ModuleTestCase extends AndroidTestCase {
         super.setUp();
 
         mTestingThread = Thread.currentThread();
-        LogUtil.setLogger(new LogUtil.AndroidLogger(Log.class).setStackInfo(true));
         mCacheDirectory = TestUtil.getCacheDirectory(getContext());
     }
 
