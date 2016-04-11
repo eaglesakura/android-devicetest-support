@@ -6,6 +6,7 @@ import android.test.AndroidTestCase;
 
 import java.io.File;
 
+@Deprecated
 public abstract class ModuleTestCase extends AndroidTestCase {
 
     private File mCacheDirectory;

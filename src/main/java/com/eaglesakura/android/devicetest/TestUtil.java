@@ -30,7 +30,7 @@ public class TestUtil {
                             String.format("%s", DEFAULT_FORMATTER.format(gInitDate))
                     );
             IOUtil.mkdirs(gCacheDirectory);
-            LogUtil.log("Cache Directory -> %s", gCacheDirectory.getAbsolutePath());
+            LogUtil.out("ModuleTest", "Cache Directory -> %s", gCacheDirectory.getAbsolutePath());
         }
 
         return gCacheDirectory;
