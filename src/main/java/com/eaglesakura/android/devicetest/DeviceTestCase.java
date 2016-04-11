@@ -20,8 +20,6 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public abstract class DeviceTestCase<AppClass extends Application> {
 
-    private AppClass mApplication;
-
     private Context mContext;
 
     private File mCacheDirectory;
@@ -33,12 +31,10 @@ public abstract class DeviceTestCase<AppClass extends Application> {
     public void onSetup() {
         mContext = InstrumentationRegistry.getContext();
         assertNotNull(mContext);
-        mApplication = (AppClass) mContext.getApplicationContext();
 
         mTestingThread = Thread.currentThread();
         mCacheDirectory = TestUtil.getCacheDirectory(getContext());
 
-        assertNotNull(mApplication);
         assertNotNull(mTestingThread);
         assertNotNull(mCacheDirectory);
     }
@@ -48,7 +44,7 @@ public abstract class DeviceTestCase<AppClass extends Application> {
     }
 
     public AppClass getApplication() {
-        return mApplication;
+        return (AppClass) getContext();
     }
 
     public Context getContext() {
