@@ -24,7 +24,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 //    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"    // set project!
 
     compileOptions {
