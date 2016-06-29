@@ -6,6 +6,9 @@ import android.test.AndroidTestCase;
 
 import java.io.File;
 
+/**
+ * JUnit3向けのTestCaseであるため、非推奨
+ */
 @Deprecated
 public abstract class ModuleTestCase extends AndroidTestCase {
 
