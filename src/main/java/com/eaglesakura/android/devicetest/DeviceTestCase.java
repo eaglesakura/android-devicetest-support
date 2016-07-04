@@ -51,6 +51,13 @@ public abstract class DeviceTestCase<AppClass extends Application> {
         return mContext;
     }
 
+    /**
+     * UnitTest側のContext(assets等）へのアクセスを行う
+     */
+    public Context getTestContext() {
+        return InstrumentationRegistry.getContext();
+    }
+
     public File getCacheDirectory() {
         return mCacheDirectory;
     }
