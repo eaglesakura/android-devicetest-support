@@ -27,11 +27,7 @@ public abstract class DeviceActivityTestCase<ActivityClass extends Activity, App
     }
 
     protected ActivityClass getActivity() {
-        if (mActivity == null) {
-            mActivity = mRule.launchActivity(null);
-            assertNotNull(mActivity);
-        }
-        return mActivity;
+        return getActivity(null);
     }
 
     protected ActivityClass getActivity(@Nullable Intent startIntent) {
