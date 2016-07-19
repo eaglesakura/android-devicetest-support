@@ -37,4 +37,14 @@ public abstract class DeviceActivityTestCase<ActivityClass extends Activity, App
         }
         return mActivity;
     }
+
+    protected void finishActivity() throws Throwable {
+        ActivityClass activity = mActivity;
+        if (activity != null) {
+            mRule.runOnUiThread(() -> {
+                activity.finish();
+            });
+            mActivity = null;
+        }
+    }
 }
