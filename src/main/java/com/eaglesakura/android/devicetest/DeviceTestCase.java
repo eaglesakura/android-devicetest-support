@@ -15,7 +15,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public abstract class DeviceTestCase<AppClass extends Application> {
@@ -26,6 +26,8 @@ public abstract class DeviceTestCase<AppClass extends Application> {
 
     @Before
     public void onSetup() {
+        assertNotNull(InstrumentationRegistry.getTargetContext()); // Load Application
+
         mTestingThread = Thread.currentThread();
         mCacheDirectory = TestUtil.getCacheDirectory(getContext());
 
@@ -62,6 +64,13 @@ public abstract class DeviceTestCase<AppClass extends Application> {
 
     public static org.hamcrest.Matcher<Boolean> isTrue() {
         return Is.is(true);
+    }
+
+    /**
+     * UnitTest用のスレッドで実行されている場合はtrue
+     */
+    public boolean isTestingThread() {
+        return Thread.currentThread().equals(mTestingThread);
     }
 
     public void cleanCache() {
