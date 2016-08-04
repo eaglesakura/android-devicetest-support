@@ -61,6 +61,9 @@ dependencies {
         compile 'com.eaglesakura:android-simple-utils:1.+'
     }
 
+    compile "com.android.support:support-v4:+"
+    compile "com.android.support:appcompat-v7:+"
+
     /**
      * Unit Testing
      */
@@ -75,7 +78,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
-//    compile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.+'
+    compile 'com.android.support.test.uiautomator:uiautomator-v18:2.+'
 }
 
 /**
