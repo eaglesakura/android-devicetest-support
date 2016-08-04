@@ -2,6 +2,7 @@ package com.eaglesakura.android.devicetest;
 
 import com.eaglesakura.junit.SupportAssertion;
 import com.eaglesakura.util.IOUtil;
+import com.eaglesakura.util.Util;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,6 +58,10 @@ public abstract class DeviceTestCase<AppClass extends Application> extends Suppo
 
     public Thread getTestingThread() {
         return mTestingThread;
+    }
+
+    public void sleep(long ms) {
+        Util.sleep(ms);
     }
 
     /**
