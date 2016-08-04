@@ -1,7 +1,5 @@
 package com.eaglesakura.android.devicetest;
 
-import com.eaglesakura.android.devicetest.scenario.ActivityScenario;
-
 import org.junit.Rule;
 
 import android.app.Activity;
@@ -9,6 +7,8 @@ import android.app.Application;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.test.rule.ActivityTestRule;
+
+import static org.junit.Assert.*;
 
 public abstract class DeviceActivityTestCase<ActivityClass extends Activity, AppClass extends Application> extends DeviceTestCase<AppClass> {
     @Rule
@@ -36,14 +36,6 @@ public abstract class DeviceActivityTestCase<ActivityClass extends Activity, App
             assertNotNull(mActivity);
         }
         return mActivity;
-    }
-
-
-    /**
-     * UIテストを開始する
-     */
-    protected ActivityScenario<ActivityClass> newScenario() {
-        return new ActivityScenario<>(getActivity());
     }
 
     protected void finishActivity() throws Throwable {
