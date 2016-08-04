@@ -1,8 +1,9 @@
 /**
  * 1.0.x   : release
  * 1.1.x   : suppoprt JUnit4
+ * 1.2.x   : 基底クラスを変更
  */
-def ARTIFACT_VERSION = "1.1"
+def ARTIFACT_VERSION = "1.2"
 def ARTIFACT_NAME = file(".").absoluteFile.name
 def ARTIFACT_INSTALL_TARGET = getArtifactInstallTarget()
 
