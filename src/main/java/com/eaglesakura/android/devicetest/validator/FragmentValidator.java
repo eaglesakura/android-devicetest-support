@@ -38,6 +38,8 @@ public class FragmentValidator extends BaseUiValidator<Fragment> {
     public <FragmentClass extends Fragment> FragmentValidator check(Class<FragmentClass> clazz, Action1<FragmentClass> action) {
         try {
             action.action((FragmentClass) mFragment);
+        } catch (Error e) {
+            throw e;
         } catch (Throwable e) {
             e.printStackTrace();
             Assert.fail();
