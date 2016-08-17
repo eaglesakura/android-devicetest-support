@@ -1,6 +1,7 @@
 package com.eaglesakura.android.devicetest.validator;
 
 import com.eaglesakura.util.StringUtil;
+import com.eaglesakura.util.Util;
 
 import org.junit.Assert;
 
@@ -11,12 +12,16 @@ import android.support.v4.app.FragmentManager;
 import java.util.List;
 
 
-public abstract class BaseUiValidator<T> {
+public abstract class BaseUiValidator<T, Self> {
     protected abstract FragmentManager getFragmentManager();
 
     protected abstract ActivityValidator getActivityValidator();
 
     protected abstract T getTarget();
+
+    protected Self self() {
+        return (Self) this;
+    }
 
     /**
      * 指定したClassにマッチするFragmentを検索する
@@ -31,6 +36,10 @@ public abstract class BaseUiValidator<T> {
     }
 
 
+    public Self sleep(long sleepTimeMs) {
+        Util.sleep(sleepTimeMs);
+        return self();
+    }
 
     /**
      * 指定したclassのFragmentを検索する
