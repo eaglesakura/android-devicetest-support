@@ -2,6 +2,9 @@ package com.eaglesakura.android.devicetest.scenario;
 
 import com.eaglesakura.util.Util;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+
 import android.app.Activity;
 import android.support.annotation.IdRes;
 import android.support.test.espresso.Espresso;
@@ -13,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * シナリオ実行を行う
  */
-public class ActivityScenario<T extends Activity> {
+public class ActivityScenario<T extends Activity> extends BaseScenario<ActivityScenario<T>> {
     T mActivity;
 
     long mDefaultSleepTime = 500;
@@ -21,6 +24,23 @@ public class ActivityScenario<T extends Activity> {
     public ActivityScenario(T activity) {
         mActivity = activity;
         assertNotNull(activity);
+    }
+
+    public <V extends View> ViewScenario<T, V> viewWith(V view) {
+        return new ViewScenario<>(
+                this,
+                Espresso.onView(new BaseMatcher<View>() {
+                    @Override
+                    public boolean matches(Object item) {
+                        return view.equals(item);
+                    }
+
+                    @Override
+                    public void describeTo(Description description) {
+
+                    }
+                })
+        );
     }
 
     public <V extends View> ViewScenario<T, V> viewWithId(Class<V> clazz, @IdRes int resId) {
