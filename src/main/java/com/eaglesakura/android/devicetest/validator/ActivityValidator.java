@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 /**
  * Activity関連のデータのバリデーションを行う
  */
-public class ActivityValidator extends BaseUiValidator<AppCompatActivity> {
+public class ActivityValidator extends BaseUiValidator<AppCompatActivity, ActivityValidator> {
     AppCompatActivity mActivity;
 
     public ActivityValidator(AppCompatActivity activity) {

@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 /**
  * Fragment関連のvalidateを行う
  */
-public class FragmentValidator extends BaseUiValidator<Fragment> {
+public class FragmentValidator extends BaseUiValidator<Fragment, FragmentValidator> {
     ActivityValidator mParent;
 
     Fragment mFragment;
