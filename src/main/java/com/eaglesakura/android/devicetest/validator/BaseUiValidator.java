@@ -46,6 +46,10 @@ public abstract class BaseUiValidator<T, Self> {
      */
     @Nullable
     public static Fragment findFragmentByClass(List<Fragment> fragments, Class<? extends Fragment> clazz) {
+        if (fragments == null) {
+            return null;
+        }
+
         for (Fragment frag : fragments) {
             if (frag == null) {
                 continue;
