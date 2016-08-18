@@ -52,11 +52,11 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
     /**
      * 指定したclassを検索する
      */
-    protected <T extends Fragment> T findFragmentByClass(Class<T> clazz) {
+    protected <T extends Fragment> T findFragment(Class<T> clazz) {
         return (T) BaseUiValidator.findFragmentByClass(getActivity().getSupportFragmentManager().getFragments(), clazz);
     }
 
-    protected <T extends View> T findViewById(Fragment fragment, Class<T> clazz, @IdRes int resId) {
+    protected <T extends View> T findView(Fragment fragment, Class<T> clazz, @IdRes int resId) {
         return (T) fragment.getView().findViewById(resId);
     }
 
