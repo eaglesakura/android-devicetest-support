@@ -45,7 +45,7 @@ public abstract class BaseUiValidator<T, Self> {
      * 指定したclassのFragmentを検索する
      */
     @Nullable
-    static Fragment findFragmentByClass(List<Fragment> fragments, Class<? extends Fragment> clazz) {
+    public static Fragment findFragmentByClass(List<Fragment> fragments, Class<? extends Fragment> clazz) {
         for (Fragment frag : fragments) {
             if (frag == null) {
                 continue;

@@ -2,6 +2,7 @@ package com.eaglesakura.android.devicetest;
 
 import com.eaglesakura.android.devicetest.scenario.ActivityScenario;
 import com.eaglesakura.android.devicetest.validator.ActivityValidator;
+import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.devicetest.validator.FragmentValidator;
 
 import org.junit.Rule;
@@ -9,12 +10,14 @@ import org.junit.Rule;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-public abstract class DeviceActivityTestCase<ActivityClass extends Activity, AppClass extends Application> extends DeviceTestCase<AppClass> {
+public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActivity, AppClass extends Application> extends DeviceTestCase<AppClass> {
     @Rule
     public final ActivityTestRule<ActivityClass> mRule;
 
@@ -44,6 +47,17 @@ public abstract class DeviceActivityTestCase<ActivityClass extends Activity, App
 
     protected ActivityValidator validate(Activity activity) {
         return new ActivityValidator((AppCompatActivity) activity);
+    }
+
+    /**
+     * 指定したclassを検索する
+     */
+    protected <T extends Fragment> T findFragment(Class<T> clazz) {
+        return (T) BaseUiValidator.findFragmentByClass(getActivity().getSupportFragmentManager().getFragments(), clazz);
+    }
+
+    protected <T extends View> T findView(Fragment fragment, Class<T> clazz, @IdRes int resId) {
+        return (T) fragment.getView().findViewById(resId);
     }
 
     protected FragmentValidator validate(Activity activity, Class<? extends Fragment>... fragments) {
