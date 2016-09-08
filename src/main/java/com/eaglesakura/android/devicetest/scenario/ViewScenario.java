@@ -2,10 +2,10 @@ package com.eaglesakura.android.devicetest.scenario;
 
 import com.eaglesakura.lambda.Action1;
 
-import android.app.Activity;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import static org.junit.Assert.fail;
@@ -13,7 +13,7 @@ import static org.junit.Assert.fail;
 /**
  * View関連の動作シナリオ
  */
-public class ViewScenario<ActivityClass extends Activity, ViewClass extends View> extends BaseScenario<ViewScenario<ActivityClass, ViewClass>> {
+public class ViewScenario<ActivityClass extends AppCompatActivity, ViewClass extends View> extends BaseScenario<ViewScenario<ActivityClass, ViewClass>> {
     ActivityScenario<ActivityClass> mActivityScenario;
 
     ViewInteraction mViewInteraction;
