@@ -6,6 +6,7 @@ import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.devicetest.validator.FragmentValidator;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.lambda.Action0;
+import com.eaglesakura.lambda.Matcher1;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.ReflectionUtil;
 import com.eaglesakura.util.StringUtil;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @SuppressLint("NewApi")
@@ -118,7 +120,19 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
 
             Field WindowManagerGlobal_mViews = WindowManagerGlobal.getDeclaredField("mViews");
             WindowManagerGlobal_mViews.setAccessible(true);
-            return (List<View>) WindowManagerGlobal_mViews.get(WindowManagerGlobal_instance);
+            List<View> views = (List<View>) WindowManagerGlobal_mViews.get(WindowManagerGlobal_instance);
+            views = new ArrayList<>(views); // 直接削除するとFrameworkの不整合が起きるので、データをクローンしておく
+
+            // 見えていないDecorView（隠れているActivity等）は除外する
+            Iterator<View> iterator = views.iterator();
+            while (iterator.hasNext()) {
+                View next = iterator.next();
+                if (next.getVisibility() != View.VISIBLE) {
+                    iterator.remove();
+                }
+            }
+
+            return views;
         } catch (Throwable e) {
             e.printStackTrace();
             fail();
@@ -126,22 +140,25 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
         }
     }
 
-    View findViewByText(String text) {
+    View findViewByMatcher(Matcher1<View> matcher) {
         for (View root : getRootViewList()) {
-            View find = ViewUtil.findViewByMatcher(root, it -> {
-                if (it instanceof TextView) {
-                    Log.d("UiTest", StringUtil.format("TextFind check[%s] target[%s]", ((TextView) it).getText().toString(), text));
-                    return ((TextView) it).getText().toString().toUpperCase().equals(text.toUpperCase());
-                } else {
-                    return false;
-                }
-            });
+            View find = ViewUtil.findViewByMatcher(root, matcher);
             if (find != null) {
                 return find;
             }
         }
-        fail(StringUtil.format("Not found text[%s]", text));
+        fail("Not found view");
         throw new Error();
+    }
+
+    View findViewByText(String text) {
+        return findViewByMatcher(it -> {
+            if (it instanceof TextView) {
+                return ((TextView) it).getText().toString().toUpperCase().equals(text.toUpperCase());
+            } else {
+                return false;
+            }
+        });
     }
 
     /**
@@ -173,6 +190,15 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
         fail();
     }
 
+    /**
+     * 指定した条件にマッチするView位置をクリックするｓ
+     */
+    public void clickWithMatcher(Matcher1<View> matcher) {
+        View find = findViewByMatcher(matcher);
+        assertNotNull(find);
+        clickWith(find);
+    }
+
     public void pressBack() {
         mDevice.pressBack();
         sleep(250);
@@ -188,22 +214,17 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
 
         Rect area = new Rect();
         runOnUi(() -> {
-//        Rect rootViewArea = new Rect();
-//        view.getRootView().getGlobalVisibleRect(rootViewArea);
-//        view.getGlobalVisibleRect(area);
-            {
-                int[] viewInWindow = new int[2];
-                int[] viewOnScreen = new int[2];
-                int[] windowOnScreen = new int[2];
+            int[] viewInWindow = new int[2];
+            int[] viewOnScreen = new int[2];
+            int[] windowOnScreen = new int[2];
 
-                view.getLocationInWindow(viewInWindow);
-                view.getLocationOnScreen(viewOnScreen);
-                windowOnScreen[0] = viewOnScreen[0] - viewInWindow[0];
-                windowOnScreen[1] = viewOnScreen[1] - viewInWindow[1];
+            view.getLocationInWindow(viewInWindow);
+            view.getLocationOnScreen(viewOnScreen);
+            windowOnScreen[0] = viewOnScreen[0] - viewInWindow[0];
+            windowOnScreen[1] = viewOnScreen[1] - viewInWindow[1];
 
-                view.getGlobalVisibleRect(area);
-                area.offset(windowOnScreen[0], windowOnScreen[1]);
-            }
+            view.getGlobalVisibleRect(area);
+            area.offset(windowOnScreen[0], windowOnScreen[1]);
         });
         mDevice.click(area.centerX(), area.centerY());
         Log.d("UiTest", StringUtil.format("Click %s pos[%d, %d]", area.toString(), area.centerX(), area.centerY()));
