@@ -4,6 +4,7 @@ import com.eaglesakura.android.devicetest.scenario.ActivityScenario;
 import com.eaglesakura.android.devicetest.validator.ActivityValidator;
 import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.devicetest.validator.FragmentValidator;
+import com.eaglesakura.util.CollectionUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.ReflectionUtil;
 import com.eaglesakura.util.StringUtil;
@@ -97,7 +98,7 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
      * 指定したclassを検索する
      */
     protected <T extends Fragment> T findFragment(Class<T> clazz) {
-        return (T) BaseUiValidator.findFragmentByClass(getActivity().getSupportFragmentManager().getFragments(), clazz);
+        return (T) BaseUiValidator.findFragmentByClass(getTopActivity(AppCompatActivity.class).getSupportFragmentManager().getFragments(), clazz);
     }
 
     protected <T extends View> T findView(Fragment fragment, Class<T> clazz, @IdRes int resId) {

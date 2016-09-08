@@ -8,6 +8,7 @@ import com.eaglesakura.util.Util;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -31,6 +32,10 @@ public class ActivityScenario<T extends AppCompatActivity> extends BaseScenario<
         assertNotNull(activity);
     }
 
+    @Override
+    public Context getContext() {
+        return mActivity;
+    }
 
     public <V extends View, F extends Fragment> ViewScenario<T, V> viewWith(ResultAction1<F, V> viewFinder, Class<F> clazz) {
         Fragment fragmentByClass = BaseUiValidator.findFragmentByClass(mActivity.getSupportFragmentManager().getFragments(), clazz);
