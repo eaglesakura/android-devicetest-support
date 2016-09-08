@@ -1,6 +1,7 @@
 package com.eaglesakura.android.devicetest.validator;
 
 import com.eaglesakura.lambda.Action1;
+import com.eaglesakura.thread.Holder;
 
 import org.junit.Assert;
 
@@ -44,6 +45,16 @@ public class FragmentValidator extends BaseUiValidator<Fragment, FragmentValidat
             e.printStackTrace();
             Assert.fail();
         }
+        return this;
+    }
+
+    public <FragmentClass extends Fragment> FragmentValidator uiCheck(Class<FragmentClass> clazz, Action1<FragmentClass> action) {
+        Holder<Object> holder = new Holder<>();
+        mFragment.getActivity().runOnUiThread(() -> {
+            check(clazz, action);
+            holder.set(new Object());
+        });
+        holder.getWithWait(1000 * 60);
         return this;
     }
 

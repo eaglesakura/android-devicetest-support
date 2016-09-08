@@ -85,12 +85,6 @@ public class ActivityScenario<T extends AppCompatActivity> extends BaseScenario<
         );
     }
 
-    public ActivityScenario<T> pressBack() {
-        Espresso.pressBack();
-        Util.sleep(mDefaultSleepTime);
-        return this;
-    }
-
     public ActivityScenario<T> sleep(long ms) {
         Util.sleep(ms);
         return this;
