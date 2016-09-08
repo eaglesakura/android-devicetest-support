@@ -4,12 +4,15 @@ import com.eaglesakura.android.devicetest.scenario.ActivityScenario;
 import com.eaglesakura.android.devicetest.validator.ActivityValidator;
 import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.devicetest.validator.FragmentValidator;
-import com.eaglesakura.util.CollectionUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.ReflectionUtil;
 import com.eaglesakura.util.StringUtil;
+import com.eaglesakura.util.Util;
 
 import org.junit.Rule;
+
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,6 +21,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +51,6 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
     protected DeviceActivityTestCase(Class<ActivityClass> clazz) {
         mRule = new ActivityTestRule<>(clazz, false, false);
     }
-
 
     @Override
     public void onSetup() {
@@ -76,6 +82,69 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
         if (!ReflectionUtil.instanceOf(getTopActivity(), clazz)) {
             fail(StringUtil.format("Activity[%s] != instance [%s]", getTopActivity().toString(), clazz.getName()));
         }
+    }
+
+    /**
+     * 指定したテキストを探し、その位置をタップする
+     */
+    public static void clickWithText(String text) {
+        Espresso.onView(ViewMatchers.withText(text))
+                .perform(ViewActions.click());
+        Util.sleep(500);
+    }
+
+    /**
+     * 指定したテキストを探し、その位置をタップする
+     */
+    public void clickWithText(@StringRes int resId) {
+        clickWithText(getContext().getString(resId));
+    }
+
+
+    /**
+     * 指定したテキストを探し、その位置をタップする
+     */
+    public static void clickWithId(@IdRes int id) {
+        Espresso.onView(ViewMatchers.withId(id))
+                .perform(ViewActions.click());
+        Util.sleep(500);
+    }
+
+    /**
+     * 指定した経路のViewを踏む
+     */
+    public void clickWithId(@IdRes int... idList) {
+        View view = null;
+        for (int id : idList) {
+            if (view == null) {
+                view = getTopActivity().findViewById(id);
+            } else {
+                view = view.findViewById(id);
+            }
+            assertNotNull(view);
+        }
+
+        // 確定したViewを踏む
+        clickWith(view);
+    }
+
+    /**
+     * 指定したViewを探し、その位置をタップする
+     */
+    public static void clickWith(View view) {
+        Espresso.onView(new BaseMatcher<View>() {
+            @Override
+            public boolean matches(Object item) {
+                return item == view;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+
+            }
+        })
+                .perform(ViewActions.click());
+        Util.sleep(500);
     }
 
     protected ActivityClass getActivity() {
