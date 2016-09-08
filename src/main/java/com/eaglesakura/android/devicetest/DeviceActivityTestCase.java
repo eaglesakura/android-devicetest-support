@@ -1,5 +1,6 @@
 package com.eaglesakura.android.devicetest;
 
+import com.eaglesakura.android.device.display.DisplayInfo;
 import com.eaglesakura.android.devicetest.scenario.ActivityScenario;
 import com.eaglesakura.android.devicetest.validator.ActivityValidator;
 import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
@@ -202,6 +203,23 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
     public void pressBack() {
         mDevice.pressBack();
         sleep(250);
+    }
+
+    public void clickScreenPosition(int screenX, int screenY) {
+        mDevice.click(screenX, screenY);
+        Log.d("UiTest", StringUtil.format("Click pos[%d, %d]", screenX, screenY));
+        Util.sleep(1000);
+    }
+
+    /**
+     * スクリーンのUV座標を指定してクリックする
+     *
+     * @param u 左端 = 0.0, 右端 = 1.0
+     * @param v 上端 = 0.0, 下端 = 1.0
+     */
+    public void clickScreenUV(double u, double v) {
+        DisplayInfo info = new DisplayInfo(getContext());
+        clickScreenPosition((int) (u * info.getWidthPixel()), (int) (v * info.getHeightPixel()));
     }
 
     /**
