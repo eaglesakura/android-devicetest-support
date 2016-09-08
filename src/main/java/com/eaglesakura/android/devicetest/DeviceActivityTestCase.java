@@ -38,7 +38,6 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressLint("NewApi")
@@ -129,18 +128,15 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
             Field WindowManagerGlobal_mViews = WindowManagerGlobal.getDeclaredField("mViews");
             WindowManagerGlobal_mViews.setAccessible(true);
             List<View> views = (List<View>) WindowManagerGlobal_mViews.get(WindowManagerGlobal_instance);
-            views = new ArrayList<>(views); // 直接削除するとFrameworkの不整合が起きるので、データをクローンしておく
+            List<View> result = new ArrayList<>(); // 必要なViewだけを返す
 
             // 見えていないDecorView（隠れているActivity等）は除外する
-            Iterator<View> iterator = views.iterator();
-            while (iterator.hasNext()) {
-                View next = iterator.next();
-                if (next.getVisibility() != View.VISIBLE) {
-                    iterator.remove();
+            for (View view : views) {
+                if (view.getVisibility() == View.VISIBLE) {
+                    result.add(0, view);    // 手前にあるViewを優先して探索させる
                 }
             }
-
-            return views;
+            return result;
         } catch (Throwable e) {
             e.printStackTrace();
             fail();
