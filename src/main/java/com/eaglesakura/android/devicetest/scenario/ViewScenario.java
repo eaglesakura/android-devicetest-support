@@ -2,6 +2,7 @@ package com.eaglesakura.android.devicetest.scenario;
 
 import com.eaglesakura.lambda.Action1;
 
+import android.content.Context;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
@@ -28,6 +29,10 @@ public class ViewScenario<ActivityClass extends AppCompatActivity, ViewClass ext
         return this;
     }
 
+    @Override
+    public Context getContext() {
+        return mActivityScenario.mActivity;
+    }
 
     public ViewScenario<ActivityClass, ViewClass> perform(ViewAction action) {
         mViewInteraction.perform(action);
