@@ -11,4 +11,16 @@ public class BaseScenario<Self> {
         Util.sleep(timeMs);
         return self();
     }
+
+    public Self shortStep() {
+        return sleep(250);
+    }
+
+    public Self step() {
+        return sleep(500);
+    }
+
+    public Self longStep() {
+        return sleep(1000);
+    }
 }
