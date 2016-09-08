@@ -4,6 +4,8 @@ import com.eaglesakura.android.devicetest.scenario.ActivityScenario;
 import com.eaglesakura.android.devicetest.validator.ActivityValidator;
 import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.devicetest.validator.FragmentValidator;
+import com.eaglesakura.android.util.ViewUtil;
+import com.eaglesakura.lambda.Action0;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.ReflectionUtil;
 import com.eaglesakura.util.StringUtil;
@@ -11,25 +13,26 @@ import com.eaglesakura.util.Util;
 
 import org.junit.Rule;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.internal.runner.junit4.statement.UiThreadStatement;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.uiautomator.UiDevice;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +51,12 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
      */
     List<Activity> mActivityStack = new ArrayList<>();
 
+
+    /**
+     * デバイス制御
+     */
+    UiDevice mDevice;
+
     protected DeviceActivityTestCase(Class<ActivityClass> clazz) {
         mRule = new ActivityTestRule<>(clazz, false, false);
     }
@@ -55,8 +64,11 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
     @Override
     public void onSetup() {
         super.onSetup();
+        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
         getApplication().unregisterActivityLifecycleCallbacks(mActivityCallback);
         getApplication().registerActivityLifecycleCallbacks(mActivityCallback);
+
         assertNull(mActivity);
     }
 
@@ -65,6 +77,21 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
      */
     public List<Activity> getActivityStack() {
         return mActivityStack;
+    }
+
+    public void runOnUi(Action0 action) {
+        try {
+            UiThreadStatement.runOnUiThread(() -> {
+                try {
+                    action.action();
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (Throwable e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     /**
@@ -84,13 +111,44 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
         }
     }
 
+    List<View> getRootViewList() {
+        try {
+            Class WindowManagerGlobal = Class.forName("android.view.WindowManagerGlobal");
+            Object WindowManagerGlobal_instance = WindowManagerGlobal.getMethod("getInstance").invoke(WindowManagerGlobal);
+
+            Field WindowManagerGlobal_mViews = WindowManagerGlobal.getDeclaredField("mViews");
+            WindowManagerGlobal_mViews.setAccessible(true);
+            return (List<View>) WindowManagerGlobal_mViews.get(WindowManagerGlobal_instance);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            fail();
+            throw new Error();
+        }
+    }
+
+    View findViewByText(String text) {
+        for (View root : getRootViewList()) {
+            View find = ViewUtil.findViewByMatcher(root, it -> {
+                if (it instanceof TextView) {
+                    Log.d("UiTest", StringUtil.format("TextFind check[%s] target[%s]", ((TextView) it).getText().toString(), text));
+                    return ((TextView) it).getText().toString().toUpperCase().equals(text.toUpperCase());
+                } else {
+                    return false;
+                }
+            });
+            if (find != null) {
+                return find;
+            }
+        }
+        fail(StringUtil.format("Not found text[%s]", text));
+        throw new Error();
+    }
+
     /**
      * 指定したテキストを探し、その位置をタップする
      */
-    public static void clickWithText(String text) {
-        Espresso.onView(ViewMatchers.withText(text))
-                .perform(ViewActions.click());
-        Util.sleep(500);
+    public void clickWithText(String text) {
+        clickWith(findViewByText(text));
     }
 
     /**
@@ -100,51 +158,56 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
         clickWithText(getContext().getString(resId));
     }
 
-
-    /**
-     * 指定したテキストを探し、その位置をタップする
-     */
-    public static void clickWithId(@IdRes int id) {
-        Espresso.onView(ViewMatchers.withId(id))
-                .perform(ViewActions.click());
-        Util.sleep(500);
-    }
-
     /**
      * 指定した経路のViewを踏む
      */
     public void clickWithId(@IdRes int... idList) {
-        View view = null;
-        for (int id : idList) {
-            if (view == null) {
-                view = getTopActivity().findViewById(id);
-            } else {
-                view = view.findViewById(id);
-            }
-            assertNotNull(view);
-        }
-
         // 確定したViewを踏む
-        clickWith(view);
+        for (View view : getRootViewList()) {
+            View find = ViewUtil.findViewById(view, idList);
+            if (find != null) {
+                clickWith(find);
+                return;
+            }
+        }
+        fail();
+    }
+
+    public void pressBack() {
+        mDevice.pressBack();
+        sleep(250);
     }
 
     /**
      * 指定したViewを探し、その位置をタップする
+     *
+     * MEMO: http://malta-yamato.hatenablog.com/entry/2016/07/30/135055
      */
-    public static void clickWith(View view) {
-        Espresso.onView(new BaseMatcher<View>() {
-            @Override
-            public boolean matches(Object item) {
-                return item == view;
-            }
+    public void clickWith(View view) {
+        assertNotNull(view);
 
-            @Override
-            public void describeTo(Description description) {
+        Rect area = new Rect();
+        runOnUi(() -> {
+//        Rect rootViewArea = new Rect();
+//        view.getRootView().getGlobalVisibleRect(rootViewArea);
+//        view.getGlobalVisibleRect(area);
+            {
+                int[] viewInWindow = new int[2];
+                int[] viewOnScreen = new int[2];
+                int[] windowOnScreen = new int[2];
 
+                view.getLocationInWindow(viewInWindow);
+                view.getLocationOnScreen(viewOnScreen);
+                windowOnScreen[0] = viewOnScreen[0] - viewInWindow[0];
+                windowOnScreen[1] = viewOnScreen[1] - viewInWindow[1];
+
+                view.getGlobalVisibleRect(area);
+                area.offset(windowOnScreen[0], windowOnScreen[1]);
             }
-        })
-                .perform(ViewActions.click());
-        Util.sleep(500);
+        });
+        mDevice.click(area.centerX(), area.centerY());
+        Log.d("UiTest", StringUtil.format("Click %s pos[%d, %d]", area.toString(), area.centerX(), area.centerY()));
+        Util.sleep(1000);
     }
 
     protected ActivityClass getActivity() {
