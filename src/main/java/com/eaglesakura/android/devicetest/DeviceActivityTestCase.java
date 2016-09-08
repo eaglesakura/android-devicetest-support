@@ -8,6 +8,7 @@ import com.eaglesakura.android.devicetest.validator.FragmentValidator;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.lambda.Action0;
 import com.eaglesakura.lambda.Matcher1;
+import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.ReflectionUtil;
 import com.eaglesakura.util.StringUtil;
@@ -21,11 +22,12 @@ import android.app.Application;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.internal.runner.junit4.statement.UiThreadStatement;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.uiautomator.UiDevice;
 import android.support.v4.app.Fragment;
@@ -60,6 +62,8 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
      */
     UiDevice mDevice;
 
+    Handler mUiHandler = new Handler(Looper.getMainLooper());
+
     protected DeviceActivityTestCase(Class<ActivityClass> clazz) {
         mRule = new ActivityTestRule<>(clazz, false, false);
     }
@@ -84,13 +88,16 @@ public abstract class DeviceActivityTestCase<ActivityClass extends AppCompatActi
 
     public void runOnUi(Action0 action) {
         try {
-            UiThreadStatement.runOnUiThread(() -> {
+            Holder holder = new Holder();
+            mUiHandler.post(() -> {
                 try {
                     action.action();
+                    holder.set(new Object());
                 } catch (Throwable e) {
                     throw new RuntimeException(e);
                 }
             });
+            holder.getWithWait(1000 * 60);
         } catch (Throwable e) {
             e.printStackTrace();
             fail();
