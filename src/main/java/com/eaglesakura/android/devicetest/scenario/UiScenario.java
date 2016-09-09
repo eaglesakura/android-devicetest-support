@@ -72,6 +72,38 @@ public class UiScenario extends BaseScenario<UiScenario> {
         return this;
     }
 
+    /**
+     * クリックを行う
+     */
+    public UiScenario click(double u, double v) {
+        ScenarioContext.clickWith(mView, u, v);
+        return this;
+    }
+
+    /**
+     * 指定されたView範囲内をランダムに叩く
+     *
+     * @param num クリック回数
+     */
+    public UiScenario monkeyClick(int num) {
+        return monkeyClick(num, 30, 60);
+    }
+
+    /**
+     * 指定されたView範囲内をランダムに叩く
+     *
+     * @param num            クリック回数
+     * @param minSleepTimeMs クリック毎の最小スリープ時間
+     * @param maxSleepTimeMs クリック毎の最大スリープ時間
+     */
+    public UiScenario monkeyClick(int num, long minSleepTimeMs, long maxSleepTimeMs) {
+        for (int i = 0; i < num; ++i) {
+            click(Math.random(), Math.random());
+            sleep(maxSleepTimeMs + (int) ((maxSleepTimeMs - minSleepTimeMs) * Math.random()));
+        }
+        return this;
+    }
+
     public View get() {
         return mView;
     }

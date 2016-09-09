@@ -193,11 +193,22 @@ public class ScenarioContext {
      *
      * MEMO: http://malta-yamato.hatenablog.com/entry/2016/07/30/135055
      */
-    static public void clickWith(View view) {
+    static void clickWith(View view) {
+        clickWith(view, 0.5, 0.5);
+    }
+
+    /**
+     * 指定したViewを探し、その位置をタップする
+     *
+     * MEMO: http://malta-yamato.hatenablog.com/entry/2016/07/30/135055
+     */
+    static void clickWith(View view, double u, double v) {
         assertNotNull(view);
         Rect area = ViewUtil.getScreenArea(view);
-        sDevice.click(area.centerX(), area.centerY());
-        Log.d("UiTest", StringUtil.format("Click %s pos[%d, %d]", area.toString(), area.centerX(), area.centerY()));
+        int clickX = area.left + (int) (u * area.width());
+        int clickY = area.top + (int) (v * area.height());
+        sDevice.click(clickX, clickY);
+        Log.d("UiTest", StringUtil.format("Click %s pos[%d, %d]", area.toString(), clickX, clickY));
         Util.sleep(250);
     }
 
