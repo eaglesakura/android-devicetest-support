@@ -1,5 +1,6 @@
 package com.eaglesakura.android.devicetest.scenario;
 
+import com.eaglesakura.android.device.display.DisplayInfo;
 import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.lambda.Action1;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import static com.eaglesakura.android.devicetest.scenario.ScenarioContext.getTopActivity;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -72,6 +74,19 @@ public class UiScenario extends BaseScenario<UiScenario> {
 
     public View get() {
         return mView;
+    }
+
+    /**
+     * 画面内にViewが存在している
+     */
+    public UiScenario inDisplay() {
+        assertNotNull(mView);
+        Rect area = ViewUtil.getScreenArea(mView);
+        DisplayInfo info = new DisplayInfo(getContext());
+        assertTrue(
+                area.intersect(0, 0, info.getWidthPixel(), info.getHeightPixel())
+        );
+        return this;
     }
 
     public UiScenario check(Action1<View> action) {
