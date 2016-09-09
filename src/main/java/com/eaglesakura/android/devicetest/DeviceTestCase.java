@@ -1,5 +1,6 @@
 package com.eaglesakura.android.devicetest;
 
+import com.eaglesakura.android.devicetest.scenario.ScenarioContext;
 import com.eaglesakura.junit.SupportAssertion;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.Util;
@@ -31,10 +32,13 @@ public abstract class DeviceTestCase<AppClass extends Application> extends Suppo
 
         assertNotNull(mTestingThread);
         assertNotNull(mCacheDirectory);
+
+        ScenarioContext.onSetup();
     }
 
     @After
     public void onShutdown() {
+        ScenarioContext.onShutdown();
     }
 
     public AppClass getApplication() {

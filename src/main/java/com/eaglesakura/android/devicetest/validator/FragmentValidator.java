@@ -7,6 +7,7 @@ import org.junit.Assert;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Fragment関連のvalidateを行う
@@ -15,6 +16,10 @@ public class FragmentValidator extends BaseUiValidator<Fragment, FragmentValidat
     ActivityValidator mParent;
 
     Fragment mFragment;
+
+    public FragmentValidator(Fragment fragment) {
+        this(new ActivityValidator((AppCompatActivity) fragment.getActivity()), fragment);
+    }
 
     public FragmentValidator(ActivityValidator parent, Fragment fragment) {
         mParent = parent;
@@ -37,6 +42,18 @@ public class FragmentValidator extends BaseUiValidator<Fragment, FragmentValidat
     }
 
     public <FragmentClass extends Fragment> FragmentValidator check(Class<FragmentClass> clazz, Action1<FragmentClass> action) {
+        try {
+            action.action((FragmentClass) mFragment);
+        } catch (Error e) {
+            throw e;
+        } catch (Throwable e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+        return this;
+    }
+
+    public <FragmentClass extends Fragment> FragmentValidator check(Action1<FragmentClass> action) {
         try {
             action.action((FragmentClass) mFragment);
         } catch (Error e) {

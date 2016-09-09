@@ -57,7 +57,7 @@ public abstract class BaseUiValidator<T, Self> {
      * 指定したclassのFragmentを検索する
      */
     @Nullable
-    public static Fragment findFragmentByClass(List<Fragment> fragments, Class<? extends Fragment> clazz) {
+    public static <T extends Fragment> T findFragmentByClass(List<Fragment> fragments, Class<T> clazz) {
         if (fragments == null) {
             return null;
         }
@@ -68,12 +68,12 @@ public abstract class BaseUiValidator<T, Self> {
             }
 
             if (frag.getClass().equals(clazz)) {
-                return frag;
+                return (T) frag;
             }
 
             Fragment check = findFragmentByClass(frag.getChildFragmentManager().getFragments(), clazz);
             if (check != null) {
-                return check;
+                return (T) check;
             }
         }
 

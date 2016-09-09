@@ -22,12 +22,12 @@ import static org.junit.Assert.fail;
 /**
  * シナリオ実行を行う
  */
-public class ActivityScenario<T extends AppCompatActivity> extends BaseScenario<ActivityScenario<T>> {
+public class EspressoActivityScenario<T extends AppCompatActivity> extends BaseScenario<EspressoActivityScenario<T>> {
     T mActivity;
 
     long mDefaultSleepTime = 500;
 
-    public ActivityScenario(T activity) {
+    public EspressoActivityScenario(T activity) {
         mActivity = activity;
         assertNotNull(activity);
     }
@@ -37,7 +37,7 @@ public class ActivityScenario<T extends AppCompatActivity> extends BaseScenario<
         return mActivity;
     }
 
-    public <V extends View, F extends Fragment> ViewScenario<T, V> viewWith(ResultAction1<F, V> viewFinder, Class<F> clazz) {
+    public <V extends View, F extends Fragment> EspressoViewScenario<T, V> viewWith(ResultAction1<F, V> viewFinder, Class<F> clazz) {
         Fragment fragmentByClass = BaseUiValidator.findFragmentByClass(mActivity.getSupportFragmentManager().getFragments(), clazz);
         if (fragmentByClass == null) {
             fail(StringUtil.format("Fragment not found[%s]", clazz.getName()));
@@ -54,8 +54,8 @@ public class ActivityScenario<T extends AppCompatActivity> extends BaseScenario<
         }
     }
 
-    public <V extends View> ViewScenario<T, V> viewWith(V view) {
-        return new ViewScenario<>(
+    public <V extends View> EspressoViewScenario<T, V> viewWith(V view) {
+        return new EspressoViewScenario<>(
                 this,
                 Espresso.onView(new BaseMatcher<View>() {
                     @Override
@@ -71,21 +71,21 @@ public class ActivityScenario<T extends AppCompatActivity> extends BaseScenario<
         );
     }
 
-    public <V extends View> ViewScenario<T, V> viewWithId(Class<V> clazz, @IdRes int resId) {
-        return new ViewScenario(
+    public <V extends View> EspressoViewScenario<T, V> viewWithId(Class<V> clazz, @IdRes int resId) {
+        return new EspressoViewScenario(
                 this,
                 Espresso.onView(ViewMatchers.withId(resId))
         );
     }
 
-    public <V extends View> ViewScenario<T, V> viewWithId(@IdRes int resId) {
-        return new ViewScenario(
+    public <V extends View> EspressoViewScenario<T, V> viewWithId(@IdRes int resId) {
+        return new EspressoViewScenario(
                 this,
                 Espresso.onView(ViewMatchers.withId(resId))
         );
     }
 
-    public ActivityScenario<T> sleep(long ms) {
+    public EspressoActivityScenario<T> sleep(long ms) {
         Util.sleep(ms);
         return this;
     }

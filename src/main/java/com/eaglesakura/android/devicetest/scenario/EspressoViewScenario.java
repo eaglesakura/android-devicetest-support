@@ -14,17 +14,17 @@ import static org.junit.Assert.fail;
 /**
  * View関連の動作シナリオ
  */
-public class ViewScenario<ActivityClass extends AppCompatActivity, ViewClass extends View> extends BaseScenario<ViewScenario<ActivityClass, ViewClass>> {
-    ActivityScenario<ActivityClass> mActivityScenario;
+public class EspressoViewScenario<ActivityClass extends AppCompatActivity, ViewClass extends View> extends BaseScenario<EspressoViewScenario<ActivityClass, ViewClass>> {
+    EspressoActivityScenario<ActivityClass> mActivityScenario;
 
     ViewInteraction mViewInteraction;
 
-    public ViewScenario(ActivityScenario<ActivityClass> activityScenario, ViewInteraction viewInteraction) {
+    public EspressoViewScenario(EspressoActivityScenario<ActivityClass> activityScenario, ViewInteraction viewInteraction) {
         mActivityScenario = activityScenario;
         mViewInteraction = viewInteraction;
     }
 
-    public ViewScenario<ActivityClass, ViewClass> click() {
+    public EspressoViewScenario<ActivityClass, ViewClass> click() {
         mViewInteraction.perform(ViewActions.click());
         return this;
     }
@@ -34,12 +34,12 @@ public class ViewScenario<ActivityClass extends AppCompatActivity, ViewClass ext
         return mActivityScenario.mActivity;
     }
 
-    public ViewScenario<ActivityClass, ViewClass> perform(ViewAction action) {
+    public EspressoViewScenario<ActivityClass, ViewClass> perform(ViewAction action) {
         mViewInteraction.perform(action);
         return this;
     }
 
-    public <T extends View> ViewScenario<ActivityClass, ViewClass> check(Action1<ViewClass> action) {
+    public <T extends View> EspressoViewScenario<ActivityClass, ViewClass> check(Action1<ViewClass> action) {
         mViewInteraction.check((view, noViewFoundException) -> {
             try {
                 action.action((ViewClass) view);
@@ -54,7 +54,7 @@ public class ViewScenario<ActivityClass extends AppCompatActivity, ViewClass ext
     /**
      * 次のシナリオへ映る
      */
-    public ActivityScenario<ActivityClass> doneView() {
+    public EspressoActivityScenario<ActivityClass> doneView() {
         return mActivityScenario;
     }
 }
