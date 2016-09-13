@@ -124,6 +124,8 @@ public class UiScenario extends BaseScenario<UiScenario> {
     public UiScenario check(Action1<View> action) {
         try {
             action.action(mView);
+        } catch (Error e) {
+            throw e;
         } catch (Throwable e) {
             e.printStackTrace();
             fail();
@@ -139,6 +141,8 @@ public class UiScenario extends BaseScenario<UiScenario> {
     public <T extends View> UiScenario check(Class<T> clazz, Action1<T> action) {
         try {
             action.action((T) mView);
+        } catch (Error e) {
+            throw e;
         } catch (Throwable e) {
             e.printStackTrace();
             fail();
