@@ -1,6 +1,6 @@
 package com.eaglesakura.android.devicetest;
 
-import com.eaglesakura.android.device.external.StorageInfo;
+import com.eaglesakura.android.device.external.Storage;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
 
@@ -20,7 +20,7 @@ public class TestUtil {
 
     public static synchronized File getCacheDirectory(Context context) {
         if (gCacheRoot == null) {
-            gCacheRoot = new File(StorageInfo.getExternalStorageRoot(context), "junit");
+            gCacheRoot = new File(Storage.getExternalDataStorage(context).getPath(), "junit");
         }
 
         if (gCacheDirectory == null) {
