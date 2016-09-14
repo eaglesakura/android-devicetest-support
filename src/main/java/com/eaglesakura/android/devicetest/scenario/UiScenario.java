@@ -98,8 +98,26 @@ public class UiScenario extends BaseScenario<UiScenario> {
      */
     public UiScenario monkeyClick(int num, long minSleepTimeMs, long maxSleepTimeMs) {
         for (int i = 0; i < num; ++i) {
-            click(Math.random(), Math.random());
-            sleep(maxSleepTimeMs + (int) ((maxSleepTimeMs - minSleepTimeMs) * Math.random()));
+            ScenarioContext.clickWith(mView, Math.random(), Math.random(), 0);
+            sleep(minSleepTimeMs + (int) ((maxSleepTimeMs - minSleepTimeMs) * Math.random()));
+        }
+        return this;
+    }
+
+    /**
+     * 指定されたView範囲内をランダムにダブルクリックする
+     *
+     * @param num            クリック回数
+     * @param minSleepTimeMs クリック毎の最小スリープ時間
+     * @param maxSleepTimeMs クリック毎の最大スリープ時間
+     */
+    public UiScenario monkeyDoublesClick(int num, long minSleepTimeMs, long maxSleepTimeMs) {
+        for (int i = 0; i < num; ++i) {
+            double u = Math.random();
+            double v = Math.random();
+            ScenarioContext.clickWith(mView, u, v, 30 + (int) (Math.random() * 15.0));
+            ScenarioContext.clickWith(mView, u, v, 0);
+            sleep(minSleepTimeMs + (int) ((maxSleepTimeMs - minSleepTimeMs) * Math.random()));
         }
         return this;
     }
