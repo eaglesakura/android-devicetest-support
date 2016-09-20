@@ -157,6 +157,13 @@ public class ScenarioContext {
         return null;
     }
 
+    public static List<View> listViewsFromMatcher(Matcher1<View> matcher) {
+        List<View> result = new ArrayList<>();
+        for (View root : getRootViewList()) {
+            result.addAll(ViewUtil.listViews(root, matcher));
+        }
+        return result;
+    }
 
     public static View findViewByText(String text) {
         return findViewByMatcher(it -> {
