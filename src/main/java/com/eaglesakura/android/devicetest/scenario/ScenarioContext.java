@@ -8,6 +8,7 @@ import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.ReflectionUtil;
 import com.eaglesakura.util.StringUtil;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.Util;
 
 import android.annotation.SuppressLint;
@@ -30,6 +31,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.eaglesakura.junit.SupportAssertion.validate;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertFalse;
@@ -60,6 +62,18 @@ public class ScenarioContext {
 
     public static Application getContext() {
         return (Application) InstrumentationRegistry.getTargetContext().getApplicationContext();
+    }
+
+    /**
+     * 特定条件に一致するまでウェイトをかける。
+     * タイムアウト期限を過ぎた場合、テウsとは失敗となる。
+     */
+    public static void await(Matcher1<Activity> matcher, long timeoutMs) throws Throwable {
+        Timer timer = new Timer();
+        while (!matcher.match(getTopActivity())) {
+            validate(timer.end()).to(timeoutMs);    // 制限時間以内である
+            Util.sleep(1);
+        }
     }
 
     /**
