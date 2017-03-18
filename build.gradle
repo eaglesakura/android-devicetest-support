@@ -13,8 +13,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5' // support Lambda
+        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0' // support Lambda
     }
 }
 
@@ -56,30 +56,24 @@ dependencies {
         compile project(':eglibrary:junit-support')
         compile project(':eglibrary:android-simple-utils')
     } else {
-        compile 'com.eaglesakura:simple-logger:1.+'
-        compile 'com.eaglesakura:simple-utils:1.+'
-        compile 'com.eaglesakura:junit-support:1.+'
-        compile 'com.eaglesakura:android-simple-utils:1.+'
+        compile "com.eaglesakura:simple-logger:1.2.449"
+        compile "com.eaglesakura:simple-utils:1.1.556"
+        compile "com.eaglesakura:junit-support:1.0.58"
+        compile "com.eaglesakura:android-simple-utils:1.0.543"
     }
 
-    compile "com.android.support:support-v4:+"
-    compile "com.android.support:appcompat-v7:+"
+    compile "com.android.support:support-v4:25.3.0"
+    compile "com.android.support:appcompat-v7:25.3.0"
 
     /**
      * Unit Testing
      */
     compile 'junit:junit:4.12'
-    compile 'com.android.support:support-annotations:+'
-    compile 'com.android.support.test:runner:0.4.+'
-    compile 'com.android.support.test.espresso:espresso-core:2.+'
-    compile('com.android.support.test.espresso:espresso-contrib:2.+') {
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'support-v7'
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-    }
-    compile 'com.android.support.test.uiautomator:uiautomator-v18:2.+'
+    compile "com.android.support:support-annotations:25.3.0"
+    compile 'com.android.support.test:runner:0.5'
+    compile 'com.android.support.test.espresso:espresso-core:2.2'
+    compile('com.android.support.test.espresso:espresso-contrib:2.2')
+    compile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }
 
 /**
@@ -151,19 +145,6 @@ uploadArchives {
             pom.version = ARTIFACT_VERSION + getArtifactVersionSuffix()
             pom.groupId = "com.eaglesakura"
             pom.artifactId = ARTIFACT_NAME
-        }
-    }
-}
-
-[uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
-    pom.project {
-        inceptionYear '2016'
-        packaging 'aar'
-        licenses {
-            license {
-                name 'MIT License'
-                url "https://raw.githubusercontent.com/eaglesakura/${ARTIFACT_NAME}/master/LICENSE.txt"
-            }
         }
     }
 }
