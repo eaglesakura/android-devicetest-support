@@ -1,16 +1,16 @@
-package com.eaglesakura.android.devicetest;
+package com.eaglesakura.android.devicetest.util;
 
 import com.eaglesakura.android.device.external.Storage;
 import com.eaglesakura.util.IOUtil;
-import com.eaglesakura.util.LogUtil;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TestUtil {
+public class DeviceTestUtil {
 
     private static final Date gInitDate = new Date();
 
@@ -30,7 +30,7 @@ public class TestUtil {
                             String.format("%s", DEFAULT_FORMATTER.format(gInitDate))
                     );
             IOUtil.mkdirs(gCacheDirectory);
-            LogUtil.out("ModuleTest", "Cache Directory -> %s", gCacheDirectory.getAbsolutePath());
+            Log.d("ModuleTest", "Cache Directory -> :: " + gCacheDirectory.getAbsolutePath());
         }
 
         return gCacheDirectory;

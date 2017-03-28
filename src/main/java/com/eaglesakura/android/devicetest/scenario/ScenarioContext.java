@@ -4,7 +4,6 @@ import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.lambda.Action0;
 import com.eaglesakura.lambda.Matcher1;
-import com.eaglesakura.log.Logger;
 import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.ReflectionUtil;
 import com.eaglesakura.util.StringUtil;
@@ -245,12 +244,12 @@ public class ScenarioContext {
     static final Application.ActivityLifecycleCallbacks sActivityCallback = new Application.ActivityLifecycleCallbacks() {
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
-            Logger.out(Logger.LEVEL_DEBUG, TAG, "Lifecycle onActivityCreated[%s]", activity.toString());
+            Log.d(TAG, StringUtil.format("Lifecycle onActivityCreated[%s]", activity.toString()));
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
-            Logger.out(Logger.LEVEL_DEBUG, TAG, "Lifecycle onActivityStarted[%s]", activity.toString());
+            Log.d(TAG, StringUtil.format("Lifecycle onActivityStarted[%s]", activity.toString()));
         }
 
         @Override
@@ -259,28 +258,28 @@ public class ScenarioContext {
             sActivityStack.remove(activity);
             sActivityStack.add(0, activity);
 
-            Logger.out(Logger.LEVEL_DEBUG, TAG, "Lifecycle onActivityResumed[%s]", activity.toString());
+            Log.d(TAG, StringUtil.format("Lifecycle onActivityResumed[%s]", activity.toString()));
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
-            Logger.out(Logger.LEVEL_DEBUG, TAG, "Lifecycle onActivityPaused[%s]", activity.toString());
+            Log.d(TAG, StringUtil.format("Lifecycle onActivityPaused[%s]", activity.toString()));
         }
 
         @Override
         public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-            Logger.out(Logger.LEVEL_DEBUG, TAG, "Lifecycle onActivitySaveInstanceState[%s]", activity.toString());
+            Log.d(TAG, StringUtil.format("Lifecycle onActivitySaveInstanceState[%s]", activity.toString()));
         }
 
         @Override
         public void onActivityStopped(Activity activity) {
-            Logger.out(Logger.LEVEL_DEBUG, TAG, "Lifecycle onActivityStopped[%s]", activity.toString());
+            Log.d(TAG, StringUtil.format("Lifecycle onActivityStopped[%s]", activity.toString()));
         }
 
         @Override
         public void onActivityDestroyed(Activity activity) {
             sActivityStack.remove(activity);
-            Logger.out(Logger.LEVEL_DEBUG, TAG, "Lifecycle onActivityDestroyed[%s]", activity.toString());
+            Log.d(TAG, StringUtil.format("Lifecycle onActivityDestroyed[%s]", activity.toString()));
         }
     };
 }
