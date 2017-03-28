@@ -62,7 +62,7 @@ dependencies {
         compile project(':eglibrary:junit-support')
         compile project(':eglibrary:android-commons')
     } else {
-        compile "com.eaglesakura:junit-support:1.1.61"
+        compile "com.eaglesakura:junit-support:1.1.63"
         compile "com.eaglesakura:android-commons:2.1.3"
     }
 
