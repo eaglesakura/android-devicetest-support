@@ -1,6 +1,5 @@
 package com.eaglesakura.android.devicetest.scenario;
 
-import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.lambda.Action0;
 import com.eaglesakura.lambda.Matcher1;
@@ -20,7 +19,6 @@ import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.uiautomator.UiDevice;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -154,10 +152,6 @@ public class ScenarioContext {
             e.printStackTrace();
             throw new Error();
         }
-    }
-
-    public static <T extends Fragment> T findFragment(Class<T> clazz) {
-        return BaseUiValidator.findFragmentByClass(getTopActivity(AppCompatActivity.class).getSupportFragmentManager().getFragments(), clazz);
     }
 
     public static View findViewByMatcher(Matcher1<View> matcher) {

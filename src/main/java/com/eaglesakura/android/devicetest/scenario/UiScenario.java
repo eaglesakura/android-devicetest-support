@@ -1,7 +1,6 @@
 package com.eaglesakura.android.devicetest.scenario;
 
 import com.eaglesakura.android.device.display.DisplayInfo;
-import com.eaglesakura.android.devicetest.validator.BaseUiValidator;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.lambda.Action1;
 import com.eaglesakura.lambda.Matcher1;
@@ -14,11 +13,9 @@ import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import static com.eaglesakura.android.devicetest.scenario.ScenarioContext.getTopActivity;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -283,14 +280,6 @@ public class UiScenario extends BaseScenario<UiScenario> {
      */
     public static UiScenario from(Activity activity) {
         return from(activity.getWindow().getDecorView());
-    }
-
-    public static UiScenario from(Activity activity, Class<? extends Fragment> fragmentClass) {
-        return from(BaseUiValidator.findFragmentByClass(((AppCompatActivity) activity).getSupportFragmentManager().getFragments(), fragmentClass));
-    }
-
-    public static UiScenario from(Class<? extends Fragment> fragmentClass) {
-        return from(BaseUiValidator.findFragmentByClass(getTopActivity(AppCompatActivity.class).getSupportFragmentManager().getFragments(), fragmentClass));
     }
 
     public static UiScenario clickFromId(@IdRes int resId) {
