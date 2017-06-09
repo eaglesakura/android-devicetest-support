@@ -77,13 +77,13 @@ dependencies {
      */
     compile 'junit:junit:4.12'
     compile 'com.android.support.test:runner:0.5'
-    implementation("com.android.support.test.espresso:espresso-core:2.2") {
+    compile("com.android.support.test.espresso:espresso-core:2.2") {
         exclude(group: "com.android.support")
     }
-    implementation('com.android.support.test.espresso:espresso-contrib:2.2') {
+    compile('com.android.support.test.espresso:espresso-contrib:2.2') {
         exclude(group: "com.android.support")
     }
-    implementation "com.android.support.test.uiautomator:uiautomator-v18:2.1.2"
+    compile "com.android.support.test.uiautomator:uiautomator-v18:2.1.2"
 }
 
 task sourcesJar(type: Jar) {
