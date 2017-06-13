@@ -1,5 +1,6 @@
 package com.eaglesakura.android.devicetest.scenario;
 
+import com.eaglesakura.android.util.FragmentUtil;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.lambda.Action0;
 import com.eaglesakura.lambda.Matcher1;
@@ -19,6 +20,7 @@ import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.uiautomator.UiDevice;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -94,9 +96,19 @@ public class ScenarioContext {
     /**
      * 現在最上位にあるActivityを取得する
      */
-    public static Activity getTopActivity() {
+    public static <T extends Activity> T getTopActivity() {
         assertFalse(sActivityStack.isEmpty());
-        return sActivityStack.get(0);
+        return (T) sActivityStack.get(0);
+    }
+
+    /**
+     * 最上位にあるActivityからFragmentを検索する
+     *
+     * @param clazz 検索対象のclass
+     */
+    public static <T extends Fragment> T getFragment(Class<T> clazz) {
+        List<T> fragments = FragmentUtil.listInterfaces(getTopActivity(), clazz);
+        return fragments.get(0);
     }
 
     public static void assertTopActivity(Class<? extends AppCompatActivity> clazz) {
