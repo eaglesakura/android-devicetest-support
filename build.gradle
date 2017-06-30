@@ -55,19 +55,9 @@ android {
     }
 }
 
-// Local or maven
-if (!hasProperty("EGLIBRARY_COMPILE_LOCAL")) {
-    ext.EGLIBRARY_COMPILE_LOCAL = false
-}
-
 dependencies {
-    if (EGLIBRARY_COMPILE_LOCAL) {
-        api project(':eglibrary:junit-support')
-        implementation project(':eglibrary:android-commons')
-    } else {
-        compile "com.eaglesakura:junit-support:1.1.63"
-        implementation "com.eaglesakura:android-commons:2.2.11"
-    }
+    compile "com.eaglesakura:junit-support:1.1.63"
+    implementation "com.eaglesakura:android-commons:2.2.11"
 
     implementation "com.android.support:support-v4:25.3.1"
     implementation "com.android.support:appcompat-v7:25.3.1"
